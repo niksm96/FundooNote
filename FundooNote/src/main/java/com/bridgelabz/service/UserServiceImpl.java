@@ -8,21 +8,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelabz.dao.UserDao;
 import com.bridgelabz.model.User;
+import com.bridgelabz.utility.TokenGenerator;
 
-@Transactional
 @Service
 public class UserServiceImpl implements UserService {
+	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private TokenGenerator tokenGenerator;
 
+	@Transactional
 	public boolean register(User user, HttpServletRequest request) {
 		int id = userDao.register(user);
 		if (id > 0) {
+			String token = tokenGenerator.generateToken(String.valueOf(id));
+			System.out.println(token);
 			return true;
 		}
 		return false;
 	}
 
+	@Transactional
 	public User login(String emailId, String password, HttpServletRequest request) {
 		User exisitingUser = userDao.login(emailId, password);
 		if (exisitingUser != null) {
@@ -30,30 +38,23 @@ public class UserServiceImpl implements UserService {
 		}
 		return null;
 	}
-
-	public User update(String emailId, User user, HttpServletRequest request) {
-		User newUser = userDao.getByEmailId(emailId);
+	
+	@Transactional
+	public User update(int id, User user, HttpServletRequest request) {
+		User newUser = userDao.getById(id);
 		if (newUser != null) {
+			newUser.setEmailId(user.getEmailId());
 			newUser.setName(user.getName());
 			newUser.setPassword(user.getPassword());
 			newUser.setMobileNumber(user.getMobileNumber());
-			userDao.updateUser(emailId, newUser);
-			return newUser;
-
+			userDao.updateUser(id, newUser);
 		}
-		return null;
+		return newUser;
 	}
 
-	public User getByEmailId(String emailId, HttpServletRequest request) {
-		User exisitingUser = userDao.getByEmailId(emailId);
-		if (exisitingUser != null) {
-			return exisitingUser;
-		}
-		return null;
-	}
-
-	public boolean delete(String emailId, HttpServletRequest request) {
-		boolean res = userDao.deleteUser(emailId);
+	@Transactional
+	public boolean delete(int id, HttpServletRequest request) {
+		boolean res = userDao.deleteUser(id);
 		if (res) {
 			return true;
 		} else

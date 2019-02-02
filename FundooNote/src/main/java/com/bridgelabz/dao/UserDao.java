@@ -9,11 +9,11 @@ public interface UserDao {
 
 	User login(String emailId,String password);
 
-	void updateUser(String emailId, User user);
+	void updateUser(int id, User user);
 
 	List<User> getUsersList();
 
-	boolean deleteUser(String emailId);
+	boolean deleteUser(int id);
 	
-	User getByEmailId(String emailId);
+	User getById(int id);
 }

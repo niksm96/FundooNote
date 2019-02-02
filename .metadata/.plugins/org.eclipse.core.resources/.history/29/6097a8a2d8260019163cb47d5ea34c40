@@ -1,0 +1,9 @@
+package com.bridgelabz.utility;
+
+public interface TokenGenerator {
+	
+	String generateToken(int id);
+	
+	int verifyToken(String token);
+
+}

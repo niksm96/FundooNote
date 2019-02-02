@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;JWTGenerator.java&apos; to &apos;FundooNote/src/main/java/com.bridgelabz.utility&apos;&#x0A;- Original project: &apos;FundooNote&apos;&#x0A;- Destination element: &apos;FundooNote/src/main/java/com.bridgelabz.utility&apos;&#x0A;- Original element: &apos;com.bridgelabz.service.JWTGenerator.java&apos;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="/src\/main\/java&lt;com.bridgelabz.utility" element1="/src\/main\/java&lt;com.bridgelabz.service{JWTGenerator.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1549104134802" units="1" version="1.0"/>
+</session>

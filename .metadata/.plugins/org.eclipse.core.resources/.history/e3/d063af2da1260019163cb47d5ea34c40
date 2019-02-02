@@ -1,0 +1,63 @@
+package com.bridgelabz.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.bridgelabz.dao.UserDao;
+import com.bridgelabz.model.User;
+
+@Transactional
+@Service
+public class UserServiceImpl implements UserService {
+	@Autowired
+	private UserDao userDao;
+
+	public boolean register(User user, HttpServletRequest request) {
+		int id = userDao.register(user);
+		if (id > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public User login(String emailId, String password, HttpServletRequest request) {
+		User exisitingUser = userDao.login(emailId, password);
+		if (exisitingUser != null) {
+			return exisitingUser;
+		}
+		return null;
+	}
+
+	public User update(int id, User user, HttpServletRequest request) {
+		User newUser = userDao.getById(id);
+		if (newUser != null) {
+			newUser.setName(user.getName());
+			newUser.setPassword(user.getPassword());
+			newUser.setMobileNumber(user.getMobileNumber());
+			userDao.updateUser(id, newUser);
+			return newUser;
+
+		}
+		return null;
+	}
+
+	public User getById(int id, HttpServletRequest request) {
+		User exisitingUser = userDao.getById(id);
+		if (exisitingUser != null) {
+			return exisitingUser;
+		}
+		return null;
+	}
+
+	public boolean delete(int id, HttpServletRequest request) {
+		boolean res = userDao.deleteUser(id);
+		if (res) {
+			return true;
+		} else
+			return false;
+	}
+
+}

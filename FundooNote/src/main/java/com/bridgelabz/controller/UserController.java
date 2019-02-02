@@ -1,5 +1,7 @@
 package com.bridgelabz.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.model.User;
 import com.bridgelabz.service.UserService;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 public class UserController {
@@ -35,6 +40,7 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ResponseEntity<?> loginUser(@RequestParam String emailId,@RequestParam String password, HttpServletRequest request) {
 		User existingUser = userService.login(emailId,password,request);
+		
 		if (existingUser != null) {
 			return new ResponseEntity<User>(existingUser,HttpStatus.FOUND);
 		}
@@ -42,28 +48,19 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateUser(@RequestParam String emailId,@RequestBody User user, HttpServletRequest request){
-		User updatedUser = userService.update(emailId,user, request);
+	public ResponseEntity<?> updateUser(@RequestParam("id") int id,@RequestBody User user, HttpServletRequest request){
+		User updatedUser = userService.update(id,user, request);
 		if (updatedUser != null) {
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>("Updated Successfully",HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Couldn't update", HttpStatus.CONFLICT);
 	}
 	
-	@RequestMapping(value = "/getByEmailId", method = RequestMethod.GET)
-	public ResponseEntity<?> loginUser(@RequestParam String emailId,HttpServletRequest request) {
-		User existingUser = userService.getByEmailId(emailId,request);
-		if (existingUser != null) {
-			return new ResponseEntity<User>(existingUser,HttpStatus.FOUND);
-		}
-		return new ResponseEntity<String>("You are not an authorized user", HttpStatus.NOT_FOUND);
-	}
-	
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public ResponseEntity<?> delete(@RequestParam String emailId,HttpServletRequest request){
-		boolean result = userService.delete(emailId, request);
+	public ResponseEntity<?> delete(@RequestParam int id,HttpServletRequest request){
+		boolean result = userService.delete(id, request);
 		if (result) {
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>("Deleted successfully",HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Couldn't delete", HttpStatus.CONFLICT);
 	}

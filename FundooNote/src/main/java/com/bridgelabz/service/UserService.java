@@ -9,9 +9,7 @@ public interface UserService {
 	
 	User login(String emailId, String password, HttpServletRequest request);
 	
-	User update(String emailId,User user, HttpServletRequest request);
+	User update(int id,User user, HttpServletRequest request);
 	
-	User getByEmailId(String emailId, HttpServletRequest request);
-	
-	boolean delete(String emailId,HttpServletRequest request);
+	boolean delete(int id,HttpServletRequest request);
 }

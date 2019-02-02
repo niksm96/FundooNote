@@ -26,6 +26,9 @@ public class User {
 
 	@Column(name = "mobileNumber")
 	private long mobileNumber;
+	
+	@Column(name="activation_status")
+	private boolean activationStatus;
 
 	public int getId() {
 		return id;
@@ -66,10 +69,20 @@ public class User {
 	public void setMobileNumber(long mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
+	
+	public boolean isActivationStatus() {
+		return activationStatus;
+	}
+
+	public void setActivationStatus(boolean activationStatus) {
+		this.activationStatus = activationStatus;
+	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", emailId=" + emailId + ", password=" + password
-				+ ", mobileNumber=" + mobileNumber+"]";
+				+ ", mobileNumber=" + mobileNumber + ", activationStatus=" + activationStatus + "]";
 	}
+
+	
 }
