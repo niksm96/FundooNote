@@ -1,0 +1,13 @@
+package com.bridgelabz.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.bridgelabz.model.Note;
+
+public interface NoteService {
+	boolean create(Note note, HttpServletRequest request);
+
+	Note update(int noteId, Note note, HttpServletRequest request);
+
+	boolean delete(int noteId, HttpServletRequest request);
+}

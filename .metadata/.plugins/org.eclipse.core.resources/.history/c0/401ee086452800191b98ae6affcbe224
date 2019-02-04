@@ -1,0 +1,33 @@
+package com.bridgelabz.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.bridgelabz.model.Note;
+import com.bridgelabz.service.NoteService;
+
+@RestController
+public class NoteController {
+
+	@Autowired
+	private NoteService noteService;
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public ResponseEntity<String> create(@RequestBody Note note, HttpServletRequest request) {
+		try {
+			if (noteService.create(note, request))
+			return new ResponseEntity<String>("Note created successfully", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<String>("Note creation unsuccessful", HttpStatus.CONFLICT);
+	}
+
+}

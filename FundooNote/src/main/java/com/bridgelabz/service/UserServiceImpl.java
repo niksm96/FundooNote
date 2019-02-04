@@ -3,11 +3,13 @@ package com.bridgelabz.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelabz.dao.UserDao;
 import com.bridgelabz.model.User;
+import com.bridgelabz.utility.EmailSender;
 import com.bridgelabz.utility.TokenGenerator;
 
 @Service
@@ -18,12 +20,20 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private TokenGenerator tokenGenerator;
+	
+	@Autowired
+	private EmailSender emailSender;
+	
+	@Autowired
+	private PasswordEncoder bcryptEncoder;
 
 	@Transactional
 	public boolean register(User user, HttpServletRequest request) {
 		int id = userDao.register(user);
 		if (id > 0) {
 			String token = tokenGenerator.generateToken(String.valueOf(id));
+			emailSender.sendEmail("", "", "hiii..!!How r u..?");
+			 user.setPassword(bcryptEncoder.encode(user.getPassword()));
 			System.out.println(token);
 			return true;
 		}

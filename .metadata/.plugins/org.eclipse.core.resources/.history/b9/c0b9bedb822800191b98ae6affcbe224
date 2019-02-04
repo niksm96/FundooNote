@@ -1,0 +1,8 @@
+package com.bridgelabz.utility;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+public class PasswordEncryption implements PasswordEncoder {
+
+
+}

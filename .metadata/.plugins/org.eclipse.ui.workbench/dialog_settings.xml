@@ -5,14 +5,22 @@
 		<item value="614" key="dialogWidth"/>
 		<list key="textEntries">
 			<item value="1"/>
+			<item value="1"/>
+			<item value="1"/>
 		</list>
 		<list key="orderedElements">
+			<item value="org.eclipse.wst.server.ui.ServersView"/>
+			<item value="org.eclipse.debug.ui.VariableView"/>
 			<item value="org.eclipse.ui.views.ResourceNavigator"/>
 		</list>
 		<list key="orderedProviders">
 			<item value="org.eclipse.e4.ui.parts"/>
+			<item value="org.eclipse.e4.ui.parts"/>
+			<item value="org.eclipse.e4.ui.parts"/>
 		</list>
 		<list key="textArray">
+			<item value="server"/>
+			<item value="varia"/>
 			<item value="nav"/>
 		</list>
 	</section>
