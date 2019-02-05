@@ -14,27 +14,32 @@ import com.bridgelabz.utility.TokenGenerator;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private TokenGenerator tokenGenerator;
-	
+
 	@Autowired
 	private EmailSender emailSender;
-	
+
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
 
 	@Transactional
 	public boolean register(User user, HttpServletRequest request) {
+		String token;
+		user.setPassword(bcryptEncoder.encode(user.getPassword()));
 		int id = userDao.register(user);
 		if (id > 0) {
-			String token = tokenGenerator.generateToken(String.valueOf(id));
-			emailSender.sendEmail("", "", "hiii..!!How r u..?");
-			 user.setPassword(bcryptEncoder.encode(user.getPassword()));
-			System.out.println(token);
+			token = tokenGenerator.generateToken(String.valueOf(id));
+			StringBuffer requestUrl = request.getRequestURL();
+			System.out.println(requestUrl);
+			String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
+			activationUrl = activationUrl + "/activationstatus/"+token;
+			System.out.println(activationUrl);
+			emailSender.sendEmail("", "", activationUrl);
 			return true;
 		}
 		return false;
@@ -42,13 +47,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public User login(String emailId, String password, HttpServletRequest request) {
-		User exisitingUser = userDao.login(emailId, password);
+		User exisitingUser = userDao.login(emailId);
+		boolean isMatch;
 		if (exisitingUser != null) {
-			return exisitingUser;
+			isMatch = bcryptEncoder.matches(password, exisitingUser.getPassword());
+			if (isMatch)
+				return exisitingUser;
 		}
 		return null;
 	}
-	
+
 	@Transactional
 	public User update(int id, User user, HttpServletRequest request) {
 		User newUser = userDao.getById(id);
@@ -69,6 +77,18 @@ public class UserServiceImpl implements UserService {
 			return true;
 		} else
 			return false;
+	}
+
+	public User activationStatus(String token,HttpServletRequest request) {
+		int id=tokenGenerator.verifyToken(token);
+		System.out.println(id);
+		User user=userDao.getById(id);
+		if(user!=null)
+		{
+			user.setActivationStatus(true);
+			userDao.updateUser(id, user);
+		}
+		return user;
 	}
 
 }

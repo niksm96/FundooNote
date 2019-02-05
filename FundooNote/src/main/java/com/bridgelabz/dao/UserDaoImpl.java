@@ -15,7 +15,7 @@ import com.bridgelabz.model.User;
 public class UserDaoImpl implements UserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
-
+	
 	public int register(User user) {
 		int userId = 0;
 		Session session = sessionFactory.getCurrentSession();
@@ -23,12 +23,11 @@ public class UserDaoImpl implements UserDao {
 		return userId;
 	}
 
-	public User login(String emailId, String password) {
+	public User login(String emailId) {
 		Session session = sessionFactory.openSession();
-		String hqlQuery = "from User where emailId = :emailId and password = :password";
+		String hqlQuery = "from User where emailId = :emailId";
 		Query query = session.createQuery(hqlQuery);
 		query.setString("emailId", emailId);
-		query.setString("password", password);
 		User existingUser = (User) query.uniqueResult();
 		session.close();
 		return existingUser;
@@ -74,4 +73,6 @@ public class UserDaoImpl implements UserDao {
 			return null;
 		}
 	}
+	
+	
 }

@@ -12,23 +12,17 @@ public class EmailSender {
 	@Autowired
 	private MailSender mailSender;
 
-	public void sendEmail(String toEmail, String subject, String body) {
+	public void sendEmail(String toEmail, String subject, String activationUrl) {
 		try {
 			SimpleMailMessage msg = new SimpleMailMessage();
 			// set message headers
 			msg.setFrom("mundargi95@gmail.com");
-
-			msg.setSubject(subject);
-
-			msg.setText(body);
-
+			msg.setTo("mundargi95@gmail.com");
+			msg.setSubject("Verification Email");
+			String message = "Please click on the link below to verify email Id /n/n " +activationUrl;
+			msg.setText(message);
 			msg.setSentDate(new Date());
-
-			msg.setTo("anmolvid135@gmail.com");
-			System.out.println("Message is ready");
 	        mailSender.send(msg);
-
-			System.out.println("EMail Sent Successfully!!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

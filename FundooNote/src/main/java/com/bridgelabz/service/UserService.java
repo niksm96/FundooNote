@@ -12,4 +12,7 @@ public interface UserService {
 	User update(int id,User user, HttpServletRequest request);
 	
 	boolean delete(int id,HttpServletRequest request);
+	
+	User activationStatus(String token, HttpServletRequest request);
+
 }
