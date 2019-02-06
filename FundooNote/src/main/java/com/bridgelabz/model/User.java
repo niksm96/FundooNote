@@ -1,10 +1,15 @@
 package com.bridgelabz.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "User")
@@ -29,6 +34,10 @@ public class User {
 	
 	@Column(name="activation_status")
 	private boolean activationStatus;
+	
+	@OneToMany(mappedBy = "userId")
+	@JsonIgnore
+	private List<Note> listOfNotes;
 
 	public int getId() {
 		return id;
@@ -78,6 +87,14 @@ public class User {
 		this.activationStatus = activationStatus;
 	}
 
+	public List<Note> getListOfNotes() {
+		return listOfNotes;
+	}
+
+	public void setListOfNotes(List<Note> listOfNotes) {
+		this.listOfNotes = listOfNotes;
+	}
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", emailId=" + emailId + ", password=" + password

@@ -102,6 +102,13 @@
 		<item value="org.springsource.sts.package:3.9.7.201812201326-RELEASE-e410"/>
 		<item value="org.springsource.sts:3.9.7.201812201326-RELEASE"/>
 	</list>
+	<section name="CleanDialogSettings">
+		<item value="569" key="DIALOG_WIDTH"/>
+		<item value="false" key="TOGGLE_SELECTED"/>
+		<item value="404" key="DIALOG_HEIGHT"/>
+		<item value="435" key="DIALOG_X_ORIGIN"/>
+		<item value="124" key="DIALOG_Y_ORIGIN"/>
+	</section>
 	<section name="ResourceNavigator">
 		<item value="" key="ResourceWorkingSetFilter.STORE_WORKING_SET"/>
 		<item value="1" key="ResourceViewer.STORE_SORT_TYPE"/>

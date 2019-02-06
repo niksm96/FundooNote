@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -42,6 +44,10 @@ public class Note {
 
 	@Column(name = "isTrashed")
 	private boolean isTrashed;
+	
+	@ManyToOne
+	@JoinColumn(name="userId", nullable=false)
+	private User userId;
 
 	public int getNoteId() {
 		return noteId;
@@ -105,6 +111,14 @@ public class Note {
 
 	public void setTrashed(boolean isTrashed) {
 		this.isTrashed = isTrashed;
+	}
+	
+	public User getUserId() {
+		return userId;
+	}
+
+	public void setUserId(User userId) {
+		this.userId = userId;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.bridgelabz.service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,12 +47,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	public User login(String emailId, String password, HttpServletRequest request) {
+	public User login(String emailId, String password, HttpServletRequest request,HttpServletResponse response) {
 		User exisitingUser = userDao.login(emailId);
+		String token = null;
 		boolean isMatch;
 		if (exisitingUser != null) {
 			isMatch = bcryptEncoder.matches(password, exisitingUser.getPassword());
-			if (isMatch)
+			if (isMatch && exisitingUser.isActivationStatus())
+				token = tokenGenerator.generateToken(String.valueOf(exisitingUser.getId()));
+				response.setHeader("token", token);
 				return exisitingUser;
 		}
 		return null;
@@ -63,7 +67,7 @@ public class UserServiceImpl implements UserService {
 		if (newUser != null) {
 			newUser.setEmailId(user.getEmailId());
 			newUser.setName(user.getName());
-			newUser.setPassword(user.getPassword());
+			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 			newUser.setMobileNumber(user.getMobileNumber());
 			userDao.updateUser(id, newUser);
 		}

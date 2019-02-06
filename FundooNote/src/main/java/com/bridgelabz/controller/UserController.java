@@ -1,6 +1,7 @@
 package com.bridgelabz.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,8 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ResponseEntity<?> loginUser(@RequestParam String emailId, @RequestParam String password,
-			HttpServletRequest request) {
-		User existingUser = userService.login(emailId, password, request);
+			HttpServletRequest request,HttpServletResponse response) {
+		User existingUser = userService.login(emailId, password, request,response);
 		try {
 			if (existingUser != null) {
 				return new ResponseEntity<User>(existingUser, HttpStatus.FOUND);

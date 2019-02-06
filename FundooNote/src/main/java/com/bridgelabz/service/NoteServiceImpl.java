@@ -9,28 +9,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelabz.dao.NoteDao;
+import com.bridgelabz.dao.UserDao;
 import com.bridgelabz.model.Note;
+import com.bridgelabz.model.User;
 
 @Service
 public class NoteServiceImpl implements NoteService {
 
 	@Autowired
 	private NoteDao noteDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Transactional
-	public boolean create(Note note, HttpServletRequest request) {
-		int noteId = noteDao.create(note);
-		if (noteId > 0)
+	public boolean create(Note note, int userId, HttpServletRequest request) {
+		User user = userDao.getById(userId);
+		note.setUserId(user);
+		int id = noteDao.create(note);
+		if (id > 0) {
 			return true;
+		}
 		return false;
 	}
 
-	public List<Note> retrieve(HttpServletRequest request) {
-		List<Note> listOfNote = noteDao.retrieve();
-		if(!listOfNote.isEmpty())
-			return listOfNote;
-		else
-			return null;
+	public List<Note> retrieve(int userId, HttpServletRequest request) {
+		User user = userDao.getById(userId);
+		if (user != null) {
+			List<Note> listOfNote = noteDao.retrieve(user);
+			if (!listOfNote.isEmpty())
+				return listOfNote;
+		}
+		return null;
 	}
 
 	@Transactional

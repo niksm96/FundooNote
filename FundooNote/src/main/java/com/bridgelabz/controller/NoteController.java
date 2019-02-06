@@ -23,14 +23,15 @@ public class NoteController {
 	private NoteService noteService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<String> create(@RequestBody Note note, HttpServletRequest request) {
-		try {
-			if (noteService.create(note, request))
-			return new ResponseEntity<String>("Note created successfully", HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<String>("Note creation unsuccessful", HttpStatus.CONFLICT);
+	public ResponseEntity<Void> createNote(@RequestBody Note note,@RequestParam("id") int userId, HttpServletRequest request) {
+			try {
+				if (noteService.create(note, userId,request))
+					return new ResponseEntity<Void>(HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			}
+		return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 	}
 	
 	@RequestMapping(value = "/updatenote", method = RequestMethod.POST)
@@ -52,8 +53,8 @@ public class NoteController {
 	}
 	
 	@RequestMapping(value = "/retrieve", method = RequestMethod.GET)
-	public ResponseEntity<?> retrieve(HttpServletRequest request){
-		List<Note> listOfNote = noteService.retrieve(request);
+	public ResponseEntity<?> retrieve(@RequestParam("id") int id, HttpServletRequest request){
+		List<Note> listOfNote = noteService.retrieve(id,request);
 		if(!listOfNote.isEmpty())
 			return new ResponseEntity<List<Note>>(listOfNote, HttpStatus.FOUND);
 		else
