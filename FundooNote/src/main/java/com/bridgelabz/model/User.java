@@ -38,6 +38,10 @@ public class User {
 	@OneToMany(mappedBy = "userId")
 	@JsonIgnore
 	private List<Note> listOfNotes;
+	
+	@OneToMany(mappedBy = "userId")
+	@JsonIgnore
+	private List<Label> listOfLabels;
 
 	public int getId() {
 		return id;
@@ -95,11 +99,19 @@ public class User {
 		this.listOfNotes = listOfNotes;
 	}
 	
+	public List<Label> getListOfLabels() {
+		return listOfLabels;
+	}
+
+	public void setListOfLabels(List<Label> listOfLabels) {
+		this.listOfLabels = listOfLabels;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", emailId=" + emailId + ", password=" + password
-				+ ", mobileNumber=" + mobileNumber + ", activationStatus=" + activationStatus + "]";
+				+ ", mobileNumber=" + mobileNumber + ", activationStatus=" + activationStatus + ", listOfNotes="
+				+ listOfNotes + ", listOfLabels=" + listOfLabels + "]";
 	}
-
 	
 }
