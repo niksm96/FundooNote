@@ -70,5 +70,9 @@
     </bean>
     
      <bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<bean id = "modelMapper" class = "org.modelmapper.ModelMapper" />
+	
+	<bean id ="validated" class = "com.bridgelabz.utility.UserValidation"/>
 
 </beans>

@@ -11,7 +11,7 @@ public interface NoteDao {
 	
 	List<Note> retrieve(User user);
 	
-	void updateNote(int noteId, Note note);
+	void updateNote(Note note);
 	
 	boolean deleteNote(int noteId);
 	

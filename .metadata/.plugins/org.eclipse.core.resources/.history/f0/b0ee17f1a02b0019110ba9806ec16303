@@ -1,0 +1,24 @@
+package com.bridgelabz.utility;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+import com.bridgelabz.model.User;
+
+
+public class UserValidation implements Validator{
+	
+	private static final String REGEX_NAME = "^[a-zA-Z]{3}*$";
+	private static final
+
+	public boolean supports(Class<?> clazz) {
+		return User.class.equals(clazz);
+	}
+
+	public void validate(Object target, Errors errors) {
+		
+		User user = (User) target;
+		
+		
+	}
+}

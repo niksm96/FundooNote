@@ -1,7 +1,5 @@
 package com.bridgelabz.dao;
 
-import java.util.List;
-
 import com.bridgelabz.model.User;
 
 public interface UserDao {
@@ -9,9 +7,7 @@ public interface UserDao {
 
 	User login(String emailId);
 
-	void updateUser(int id, User user);
-
-	List<User> getUsersList();
+	void updateUser(User user);
 
 	boolean deleteUser(int id);
 

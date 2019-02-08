@@ -1,6 +1,7 @@
 package com.bridgelabz.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -32,15 +33,15 @@ public class NoteDaoImpl implements NoteDao {
 	public List<Note> retrieve(User user) {
 		Session session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Note.class).add(Restrictions.eq("userId", user));
-		List<Note> listOfNotes = criteria.list();
-		return listOfNotes;
+		List<Note> notes = criteria.list();
+		return notes;
 	}
 
-	public void updateNote(int noteId, Note note) {
+	public void updateNote(Note note) {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
+		Transaction transaction = session.beginTransaction();
 		session.update(note);
-		tx.commit();
+		transaction.commit();
 		session.close();
 	}
 
@@ -50,12 +51,10 @@ public class NoteDaoImpl implements NoteDao {
 		String hqlQuery = "delete Label where noteId = :noteId";
 		Query query = session.createQuery(hqlQuery);
 		query.setInteger("noteId", noteId);
-		int i = query.executeUpdate();
+		int noOfRowsEffected = query.executeUpdate();
 		tx.commit();
 		session.close();
-		if (i > 0)
-			return true;
-		return false;
+		return (noOfRowsEffected > 0)? true:false;
 	}
 
 	public Note getById(int noteId) {
@@ -64,51 +63,47 @@ public class NoteDaoImpl implements NoteDao {
 		Query query = session.createQuery(hqlQuery);
 		query.setInteger("noteId", noteId);
 		Note existingNote = (Note) query.uniqueResult();
-		if (existingNote != null) {
+		Optional<Note> isUserNull = Optional.ofNullable(existingNote);
+		if (isUserNull.isPresent())
 			session.close();
-			return existingNote;
-		} else
-			return null;
+		return existingNote;
 	}
 
 	@Override
 	public int createLabel(Label label) {
-		int labelId = 0;
 		Session session = sessionFactory.getCurrentSession();
-		labelId = (Integer) session.save(label);
+		int labelId = (Integer) session.save(label);
 		return labelId;
 	}
 
 	@Override
 	public void updateLabel(Label label) {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
+		Transaction transaction = session.beginTransaction();
 		session.update(label);
-		tx.commit();
+		transaction.commit();
 		session.close();
 	}
 
 	@Override
 	public boolean deleteLabel(int labelId) {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
+		Transaction transaction = session.beginTransaction();
 		String hqlQuery = "delete Label where labelId = :labelId";
 		Query query = session.createQuery(hqlQuery);
 		query.setInteger("labelId", labelId);
-		int i = query.executeUpdate();
-		tx.commit();
+		int noOfRowsEffected = query.executeUpdate();
+		transaction.commit();
 		session.close();
-		if (i > 0)
-			return true;
-		return false;
+		return (noOfRowsEffected > 0)? true:false;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Label> retrieveLabel(User user) {
 		Session session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Label.class).add(Restrictions.eq("userId", user));
-		List<Label> listOfLabels = criteria.list();
-		return listOfLabels;
+		List<Label> labels = criteria.list();
+		return labels;
 	}
 
 	@Override
@@ -118,10 +113,9 @@ public class NoteDaoImpl implements NoteDao {
 		Query query = session.createQuery(hqlQuery);
 		query.setInteger("labelId", labelId);
 		Label existingLabel = (Label) query.uniqueResult();
-		if (existingLabel != null) {
+		Optional<Label> isUserNull = Optional.ofNullable(existingLabel);
+		if (isUserNull.isPresent())
 			session.close();
-			return existingLabel;
-		} else
-			return null;
+		return existingLabel;
 	}
 }

@@ -5,6 +5,7 @@
 /home/admin1/FundooApp/FundooNote/src/main/java/com/bridgelabz/service/NoteService.java
 /home/admin1/FundooApp/FundooNote/src/main/java/com/bridgelabz/dao/UserDaoImpl.java
 /home/admin1/FundooApp/FundooNote/src/main/java/com/bridgelabz/service/NoteServiceImpl.java
+/home/admin1/FundooApp/FundooNote/src/main/java/com/bridgelabz/model/Label.java
 /home/admin1/FundooApp/FundooNote/src/main/java/com/bridgelabz/utility/EmailSender.java
 /home/admin1/FundooApp/FundooNote/src/main/java/com/bridgelabz/service/UserService.java
 /home/admin1/FundooApp/FundooNote/src/main/java/com/bridgelabz/dao/NoteDao.java

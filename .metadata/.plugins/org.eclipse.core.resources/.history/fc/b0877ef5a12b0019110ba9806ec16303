@@ -1,0 +1,25 @@
+package com.bridgelabz.utility;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+import com.bridgelabz.model.User;
+
+
+public class UserValidation implements Validator{
+	
+	private static final String REGEX_NAME = "^[a-zA-Z]{3}[a-zA-Z]*$";
+	private static final String REGEX_EMAIL = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
+	private static final String REGEX_PASSWORD = "";
+	
+	public boolean supports(Class<?> clazz) {
+		return User.class.equals(clazz);
+	}
+
+	public void validate(Object target, Errors errors) {
+		
+		User user = (User) target;
+		
+		
+	}
+}

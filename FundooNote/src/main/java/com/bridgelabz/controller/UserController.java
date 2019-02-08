@@ -2,12 +2,18 @@ package com.bridgelabz.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,8 +28,12 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<Void> registerUser(@RequestBody User user, HttpServletRequest request) {
+	@RequestMapping(value = "/registeruser", method = RequestMethod.POST)
+	public ResponseEntity<Void> registerUser(@RequestBody @Validated User user, BindingResult bindingResult,
+			HttpServletRequest request) {
+//		ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+//		Validator validator = vf.getValidator();
+//		validator.validate(user);
 		try {
 			if (userService.register(user, request))
 				return new ResponseEntity<Void>(HttpStatus.OK);
@@ -34,10 +44,10 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ResponseEntity<?> loginUser(@RequestParam String emailId, @RequestParam String password,
-			HttpServletRequest request,HttpServletResponse response) {
-		User existingUser = userService.login(emailId, password, request,response);
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<?> loginUser(@RequestBody User user, HttpServletRequest request,
+			HttpServletResponse response) {
+		User existingUser = userService.login(user, request, response);
 		try {
 			if (existingUser != null) {
 				return new ResponseEntity<User>(existingUser, HttpStatus.FOUND);
@@ -52,19 +62,19 @@ public class UserController {
 				HttpStatus.NOT_FOUND);
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateUser(@RequestParam("id") int id, @RequestBody User user,
+	@RequestMapping(value = "/updateuser", method = RequestMethod.POST)
+	public ResponseEntity<?> updateUser(@RequestHeader String token, @RequestBody User user,
 			HttpServletRequest request) {
-		User updatedUser = userService.update(id, user, request);
+		User updatedUser = userService.update(token, user, request);
 		if (updatedUser != null) {
 			return new ResponseEntity<String>("Updated Successfully", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Couldn't update", HttpStatus.CONFLICT);
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public ResponseEntity<?> delete(@RequestParam int id, HttpServletRequest request) {
-		boolean result = userService.delete(id, request);
+	@RequestMapping(value = "/deleteuser", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteUser(@RequestHeader String token, HttpServletRequest request) {
+		boolean result = userService.delete(token, request);
 		if (result) {
 			return new ResponseEntity<String>("Deleted successfully", HttpStatus.OK);
 		}
@@ -72,7 +82,7 @@ public class UserController {
 	}
 
 	@RequestMapping("/activationstatus/{token:.+}")
-	public ResponseEntity<?> activateUser(@PathVariable("token") String token,HttpServletRequest request) {
+	public ResponseEntity<?> activateUser(@PathVariable("token") String token, HttpServletRequest request) {
 		User updatedUser = userService.activationStatus(token, request);
 		if (updatedUser != null) {
 			return new ResponseEntity<String>("Activated Successfully", HttpStatus.OK);
@@ -80,4 +90,21 @@ public class UserController {
 		return new ResponseEntity<String>("Couldn't activate", HttpStatus.CONFLICT);
 	}
 
+	@RequestMapping("/forgotpassword")
+	public ResponseEntity<?> forgotPassword(@RequestParam("emailId") String emailId, HttpServletRequest request) {
+		if (userService.forgotPassword(emailId, request)) {
+			return new ResponseEntity<String>("Forgot password operation successful", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Forgot password operation not successful", HttpStatus.CONFLICT);
+	}
+
+	@RequestMapping(value = "/resetpassword/{token:.+}", method = RequestMethod.PUT)
+	public ResponseEntity<?> resetPassword(@PathVariable("token") String token, @RequestBody User user,
+			HttpServletRequest request) {
+		User updatedUser = userService.resetPassword(user, token, request);
+		if (updatedUser != null) {
+			return new ResponseEntity<String>("Your password has been reset", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Your password couldn't be reset", HttpStatus.CONFLICT);
+	}
 }

@@ -1,6 +1,0 @@
-com/bridgelabz/model/User.class
-com/bridgelabz/service/UserServiceImpl.class
-com/bridgelabz/controller/UserController.class
-com/bridgelabz/dao/UserDaoImpl.class
-com/bridgelabz/dao/UserDao.class
-com/bridgelabz/service/UserService.class

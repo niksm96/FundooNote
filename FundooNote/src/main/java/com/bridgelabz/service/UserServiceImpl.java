@@ -36,10 +36,8 @@ public class UserServiceImpl implements UserService {
 		if (id > 0) {
 			token = tokenGenerator.generateToken(String.valueOf(id));
 			StringBuffer requestUrl = request.getRequestURL();
-			System.out.println(requestUrl);
 			String activationUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
-			activationUrl = activationUrl + "/activationstatus/"+token;
-			System.out.println(activationUrl);
+			activationUrl = activationUrl + "/activationstatus/" + token;
 			emailSender.sendEmail("", "", activationUrl);
 			return true;
 		}
@@ -47,51 +45,75 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	public User login(String emailId, String password, HttpServletRequest request,HttpServletResponse response) {
-		User exisitingUser = userDao.login(emailId);
+	public User login(User user, HttpServletRequest request, HttpServletResponse response) {
+		User exisitingUser = userDao.login(user.getEmailId());
 		String token = null;
 		boolean isMatch;
 		if (exisitingUser != null) {
-			isMatch = bcryptEncoder.matches(password, exisitingUser.getPassword());
-			if (isMatch && exisitingUser.isActivationStatus())
+			isMatch = bcryptEncoder.matches(user.getPassword(), exisitingUser.getPassword());
+			if (isMatch && exisitingUser.isActivationStatus()) {
 				token = tokenGenerator.generateToken(String.valueOf(exisitingUser.getId()));
 				response.setHeader("token", token);
 				return exisitingUser;
+			}
 		}
 		return null;
 	}
 
 	@Transactional
-	public User update(int id, User user, HttpServletRequest request) {
+	public User update(String token, User user, HttpServletRequest request) {
+		int id = tokenGenerator.verifyToken(token);
 		User newUser = userDao.getById(id);
 		if (newUser != null) {
 			newUser.setEmailId(user.getEmailId());
 			newUser.setName(user.getName());
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 			newUser.setMobileNumber(user.getMobileNumber());
-			userDao.updateUser(id, newUser);
+			userDao.updateUser(newUser);
 		}
 		return newUser;
 	}
 
 	@Transactional
-	public boolean delete(int id, HttpServletRequest request) {
-		boolean res = userDao.deleteUser(id);
-		if (res) {
-			return true;
-		} else
-			return false;
+	public boolean delete(String token, HttpServletRequest request) {
+		int id = tokenGenerator.verifyToken(token);
+		return userDao.deleteUser(id);
 	}
 
-	public User activationStatus(String token,HttpServletRequest request) {
-		int id=tokenGenerator.verifyToken(token);
+	public User activationStatus(String token, HttpServletRequest request) {
+		int id = tokenGenerator.verifyToken(token);
 		System.out.println(id);
-		User user=userDao.getById(id);
-		if(user!=null)
-		{
+		User user = userDao.getById(id);
+		if (user != null) {
 			user.setActivationStatus(true);
-			userDao.updateUser(id, user);
+			userDao.updateUser(user);
 		}
 		return user;
+	}
+
+	public boolean forgotPassword(String emailId, HttpServletRequest request) {
+		User existingUser = userDao.login(emailId);
+		if (existingUser != null) {
+			String token = tokenGenerator.generateToken(String.valueOf(existingUser.getId()));
+			StringBuffer requestUrl = request.getRequestURL();
+			System.out.println(requestUrl);
+			String forgotPasswordUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
+			forgotPasswordUrl = forgotPasswordUrl + "/resetpassword/" + token;
+			System.out.println(forgotPasswordUrl);
+			emailSender.sendEmail("", "", forgotPasswordUrl);
+			return true;
+		}
+		return false;
+	}
+
+	public User resetPassword(User user, String token, HttpServletRequest request) {
+		int id = tokenGenerator.verifyToken(token);
+		User existingUser = userDao.getById(id);
+		if (existingUser != null) {
+			existingUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+			userDao.updateUser(existingUser);
+			return existingUser;
+		}
+		return null;
 	}
 }
