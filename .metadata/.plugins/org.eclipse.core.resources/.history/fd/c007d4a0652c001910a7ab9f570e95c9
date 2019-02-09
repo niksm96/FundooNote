@@ -12,7 +12,6 @@ public class RequestProcessingInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String value = request.getHeader("token");
-		System.out.println(value);
 		if (!value.equals(null))
 			return true;
 		return false;

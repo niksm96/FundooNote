@@ -81,11 +81,11 @@
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 	
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/home" />
+	<interceptors>
+		<interceptor>
+			<mapping path="/home" />
 			<bean class="com.bridgelabz.utility.RequestProcessingInterceptor"></bean>
-		</mvc:interceptor>
-	</mvc:interceptors>
+		</interceptor>
+	</interceptors>
 
 </beans>

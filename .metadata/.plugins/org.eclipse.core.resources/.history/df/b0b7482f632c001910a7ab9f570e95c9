@@ -15,12 +15,10 @@ public class UserValidation implements Validator {
     static final String REGEX_PASSWORD = "^[a-zA-Z0-9]{3,8}$";
     static final String REGEX_MOBILE_NUMBER = "^[0-9]{10}$";
 
-    @Override
 	public boolean supports(Class<?> clazz) {
 		return User.class.equals(clazz);
 	}
 
-    @Override
 	public void validate(Object target, Errors errors) {
 		User user = (User) target;
 		if (!user.getName().matches(REGEX_NAME)) {

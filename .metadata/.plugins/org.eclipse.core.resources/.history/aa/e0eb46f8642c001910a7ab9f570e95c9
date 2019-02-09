@@ -83,7 +83,7 @@
 	
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/home" />
+			<mapping path="/home" />
 			<bean class="com.bridgelabz.utility.RequestProcessingInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
