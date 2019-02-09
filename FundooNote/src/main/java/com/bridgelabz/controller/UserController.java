@@ -2,15 +2,16 @@ package com.bridgelabz.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -28,20 +29,26 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	@Qualifier("userValidator")
+	private Validator validator;
+
+	@InitBinder
+	private void initBinder(WebDataBinder binder) {
+		binder.setValidator(validator);
+	}
+
 	@RequestMapping(value = "/registeruser", method = RequestMethod.POST)
-	public ResponseEntity<Void> registerUser(@RequestBody @Validated User user, BindingResult bindingResult,
+	public ResponseEntity<?> registerUser(@Validated @RequestBody User user, BindingResult bindingResult,
 			HttpServletRequest request) {
-//		ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
-//		Validator validator = vf.getValidator();
-//		validator.validate(user);
-		try {
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<String>("Add details in proper format", HttpStatus.CONFLICT);
+		} else {
 			if (userService.register(user, request))
 				return new ResponseEntity<Void>(HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			else
+				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)

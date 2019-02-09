@@ -34,7 +34,7 @@ public class NoteServiceImpl implements NoteService {
 		User user = userDao.getById(userId);
 		note.setUserId(user);
 		int id = noteDao.create(note);
-		return (id > 0)? true: false;
+		return (id > 0) ? true : false;
 	}
 
 	public List<Note> retrieve(String token, HttpServletRequest request) {
@@ -42,7 +42,7 @@ public class NoteServiceImpl implements NoteService {
 		int userId = tokenGenerator.verifyToken(token);
 		User user = userDao.getById(userId);
 		if (user != null)
-			 notes = noteDao.retrieve(user);
+			notes = noteDao.retrieve(user);
 		return notes;
 	}
 
@@ -53,16 +53,17 @@ public class NoteServiceImpl implements NoteService {
 		User user = userDao.getById(userId);
 		if (user != null) {
 			newNote = noteDao.getById(noteId);
-			if (newNote != null) {
+			if (newNote != null && newNote.getUserId().getId() == userId) {
 				newNote.setTitle(note.getTitle());
 				newNote.setDescription(note.getDescription());
 				newNote.setArchive(note.isArchive());
 				newNote.setPinned(note.isPinned());
 				newNote.setTrashed(note.isTrashed());
 				noteDao.updateNote(newNote);
+				return newNote;
 			}
 		}
-		return newNote;
+		return null;
 	}
 
 	@Transactional
@@ -82,7 +83,7 @@ public class NoteServiceImpl implements NoteService {
 		User user = userDao.getById(userId);
 		label.setUserId(user);
 		int id = noteDao.createLabel(label);
-		return (id > 0) ? true: false;
+		return (id > 0) ? true : false;
 	}
 
 	@Override
@@ -137,8 +138,7 @@ public class NoteServiceImpl implements NoteService {
 		Note note = noteDao.getById(noteId);
 		List<Label> labels = note.getListOfLabels();
 		if (!labels.isEmpty()) {
-			labels = labels.stream().filter(label -> label.getLabelId() != labelId)
-					.collect(Collectors.toList());
+			labels = labels.stream().filter(label -> label.getLabelId() != labelId).collect(Collectors.toList());
 			note.setListOfLabels(labels);
 			noteDao.updateNote(note);
 			return true;

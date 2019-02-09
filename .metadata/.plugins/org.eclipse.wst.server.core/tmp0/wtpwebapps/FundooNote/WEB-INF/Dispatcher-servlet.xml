@@ -73,6 +73,12 @@
 	
 	<bean id = "modelMapper" class = "org.modelmapper.ModelMapper" />
 	
-	<bean id ="validated" class = "com.bridgelabz.utility.UserValidation"/>
+	<bean id="userValidator" class="com.bridgelabz.utility.UserValidation" />
+	
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:message" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 
 </beans>
