@@ -1,7 +1,0 @@
-package com.bridgelabz.utility;
-
-public interface TokenGenerator {
-	
-	String generateToken(int id);
-
-}

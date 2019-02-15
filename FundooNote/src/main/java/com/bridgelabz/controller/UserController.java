@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -30,12 +29,11 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	@Qualifier("userValidator")
-	private Validator validator;
+	private Validator userValidator;
 
 	@InitBinder
 	private void initBinder(WebDataBinder binder) {
-		binder.setValidator(validator);
+		binder.setValidator(userValidator);
 	}
 
 	@RequestMapping(value = "/registeruser", method = RequestMethod.POST)

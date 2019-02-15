@@ -5,7 +5,7 @@
 		<item value="614" key="dialogWidth"/>
 		<list key="textEntries">
 			<item value="1"/>
-			<item value="1"/>
+			<item value="2"/>
 			<item value="1"/>
 		</list>
 		<list key="orderedElements">
@@ -21,6 +21,7 @@
 		<list key="textArray">
 			<item value="varia"/>
 			<item value="server"/>
+			<item value="ser"/>
 			<item value="nav"/>
 		</list>
 	</section>
